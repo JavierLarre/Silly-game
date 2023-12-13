@@ -5,9 +5,13 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QKeyEvent
 
-from frontend import bunny_frontend_functions as bff
-from frontend import entities
+from game.frontend import frontend_functions as f_utils
+from game.frontend import entities
 import param as p
+
+from game.frontend.frontend_functions import get_rata_path
+from PyQt6.QtGui import QPixmap
+
 
 class LevelSelector(QWidget):
     selected_level = pyqtSignal(str)
@@ -45,6 +49,7 @@ class LevelSelector(QWidget):
         self.setLayout(hbox)
 
     def add_options(self, options: list[str]):
+        self.options.clear()
         self.options.addItems(options)
 
     def send_level(self):
@@ -72,7 +77,7 @@ class GameWindow(QMainWindow):
 
         layout = QGridLayout()
         layout.setSpacing(0)
-        positions = bff.get_all_positions(maze)
+        positions = f_utils.get_all_positions(maze)
 
         for i, j in positions:
             if maze[i][j] == "P":
@@ -88,10 +93,25 @@ class GameWindow(QMainWindow):
         self.centralWidget().setLayout(layout)
 
     def keyPressEvent(self, a0: QKeyEvent | None) -> None:
-        if not a0.isAutoRepeat():
-            self.pressed_key.emit(a0)
+        self.pressed_key.emit(a0)
+        
 
     def move_player(self, direction: str, new_position: list):
         grid: QGridLayout = self.centralWidget().layout()
         grid.addWidget(self.player, *new_position)
         self.player.raise_()
+
+    def rata(self):
+        print("rata")
+        rata_1, rata_2 = QLabel(self), QLabel(self)
+        path_1, path_2 = get_rata_path()
+        pix_1, pix_2 = QPixmap(path_1), QPixmap(path_2)
+        rata_1.setPixmap(pix_1)
+        rata_1.setScaledContents(True)
+        rata_2.setPixmap(pix_2)
+        rata_2.setScaledContents(True)
+        rata_1.setGeometry(100, 200, 200, 200)
+        rata_2.setGeometry(300, 200, 200, 200)
+        rata_1.show()
+        rata_2.show()
+        

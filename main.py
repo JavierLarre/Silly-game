@@ -1,8 +1,8 @@
 from PyQt6.QtWidgets import QApplication
 import sys
 
-from backend.backend import GameLogic
-from frontend.frontend import GraphicsLogic
+from game.backend.backend import GameLogic
+from game.frontend.frontend import GraphicsLogic
 
 
 class Game:
@@ -22,6 +22,11 @@ class Game:
         self.backend.new_position.connect(
             self.frontend.move_player)
         
+        self.backend.go_back.connect(
+            self.frontend.show_level_selector)
+        
+        self.backend.exit_reached.connect(
+            self.frontend.exit_reached)
 
     def connect_frontend_signals(self):
         self.frontend.selected_level.connect(

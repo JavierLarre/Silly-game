@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QLabel
 from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtGui import QPixmap
 
-from frontend.bunny_frontend_functions import get_sprite_path
+from game.frontend.frontend_functions import get_sprite_path
 
 
 class Player(QLabel):

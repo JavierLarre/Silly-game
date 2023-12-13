@@ -1,9 +1,9 @@
 from PyQt6.QtCore import QObject
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QKeyEvent
+from PyQt6.QtWidgets import QWidget
 
-from frontend.windows import LevelSelector, GameWindow
-
+from game.frontend.windows import LevelSelector, GameWindow
 
 class GraphicsLogic(QObject):
     pressed_key = pyqtSignal(QKeyEvent)
@@ -32,3 +32,10 @@ class GraphicsLogic(QObject):
 
     def move_player(self, direction: str, new_position: list):
         self.game_window.move_player(direction, new_position)
+
+    def show_level_selector(self):
+        self.level_selector.show()
+        self.game_window.hide()
+
+    def exit_reached(self):
+        self.game_window.rata()

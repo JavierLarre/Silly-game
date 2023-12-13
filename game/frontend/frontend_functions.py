@@ -15,3 +15,7 @@ def get_axis(direction: str) -> tuple:
     axis = (0 if (direction == "up" or direction == "down") else 1)
     i = (-1 if (direction == "up" or direction == "left") else 1)
     return (axis, i)
+
+def get_rata_path() -> str:
+    return (join(*p.SPRITES_PATH, "rata_izquierda.jpg"),
+            join(*p.SPRITES_PATH, "rata_derecha.jpg"))
