@@ -1,4 +1,5 @@
 import typing
+from PyQt6 import QtGui
 from PyQt6.QtWidgets import (
     QLabel, QWidget, QPushButton, QGridLayout, QMainWindow,
     QHBoxLayout, QVBoxLayout, QComboBox)
@@ -115,3 +116,33 @@ class GameWindow(QMainWindow):
         rata_1.show()
         rata_2.show()
         
+class EditorWindow(QMainWindow):
+    def __init__(self) -> None:
+        super().__init__()
+        self.setGeometry(p.X_POS,
+                         p.Y_POS,
+                         p.WIDTH_GAME,
+                         p.HEIGHT_GAME)
+        self.setCentralWidget(QLabel(self))
+        self.centralWidget().setMaximumSize(p.WIDTH_GAME, p.HEIGHT_GAME)
+
+    def load_maze(self, maze: list):
+        old_layout = self.centralWidget().layout()
+        if old_layout is not None:
+            QWidget().setLayout(old_layout)
+
+        layout = QGridLayout()
+        layout.setSpacing(0)
+        positions = f_utils.get_all_positions(maze)
+
+        for i, j in positions:
+            tile = entities.ClickableTile(self, (i, j))
+            layout.addWidget(tile, i, j)
+            tile.clicked.connect(self.tile_clicked)
+            
+            if maze[i][j] == "-":
+                tile.change_sprite()
+
+    def tile_clicked(self):
+        tile = self.sender()
+        print(tile.position)

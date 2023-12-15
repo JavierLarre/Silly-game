@@ -7,18 +7,11 @@ import param as p
 from game.backend import backend_functions as b_utils
 
 
-# TODO
-# load list of mazes
-# send mazes info
-# end level
-# move bunny
-
-
 class GameLogic(QObject):
     mazes_list = pyqtSignal(list)
     selected_maze = pyqtSignal(list)
     new_position = pyqtSignal(str, list)
-    status_bat = pyqtSignal(str)
+    status_bar = pyqtSignal(str)
     go_back = pyqtSignal()
     exit_reached = pyqtSignal()
 
@@ -82,3 +75,30 @@ class GameLogic(QObject):
             if self.maze[i][j] == "S":
                 self.special_positions["exit"] = [i, j]
             
+
+class EditorLogic(QObject):
+    mazes_list = pyqtSignal(list)
+    selected_maze = pyqtSignal(list)
+    status_bar = pyqtSignal(str)
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.maze = []
+    
+    def start(self):
+        mazes = b_utils.get_mazes()
+        mazes.append("&new maze")
+        self.mazes_list.emit(mazes)
+
+    def load_maze(self, file_name: str):
+        if file_name == "&new maze":
+            self.maze = [["P" for i in range(self.width)] for j in range(self.height)]
+        else:
+            self.maze = b_utils.read_maze(file_name)
+        
+        self.get_special_positions()
+        self.selected_maze.emit(self.maze)
+
+    def recieve_dimensions(self, w, h):
+        self.width = w
+        self.height = h

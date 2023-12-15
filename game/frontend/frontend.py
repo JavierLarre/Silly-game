@@ -3,7 +3,7 @@ from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import QWidget
 
-from game.frontend.windows import LevelSelector, GameWindow
+from game.frontend.windows import LevelSelector, GameWindow, EditorWindow
 
 class GraphicsLogic(QObject):
     pressed_key = pyqtSignal(QKeyEvent)
@@ -18,6 +18,8 @@ class GraphicsLogic(QObject):
         self.game_window = GameWindow()
         self.game_window.pressed_key.connect(
             self.pressed_key.emit)
+        
+        self.editor_window = EditorWindow()
     
     def start(self):
         self.level_selector.show()
@@ -27,8 +29,8 @@ class GraphicsLogic(QObject):
 
     def show_maze(self, maze: list):
         self.level_selector.hide()
-        self.game_window.show()
         self.game_window.load_maze(maze)
+        self.game_window.show()
 
     def move_player(self, direction: str, new_position: list):
         self.game_window.move_player(direction, new_position)
@@ -39,3 +41,8 @@ class GraphicsLogic(QObject):
 
     def exit_reached(self):
         self.game_window.rata()
+    
+    def show_level_editor(self, maze: list):
+        self.level_selector.hide()
+        self.editor_window.load_maze(maze)
+        self.editor_window.show()
