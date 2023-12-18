@@ -2,7 +2,7 @@ import typing
 from PyQt6 import QtGui
 from PyQt6.QtWidgets import (
     QLabel, QWidget, QPushButton, QGridLayout, QMainWindow,
-    QHBoxLayout, QVBoxLayout, QComboBox)
+    QHBoxLayout, QVBoxLayout, QComboBox, QSpinBox)
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtGui import QKeyEvent
 
@@ -15,7 +15,7 @@ from PyQt6.QtGui import QPixmap
 
 
 class LevelSelector(QWidget):
-    selected_level = pyqtSignal(str)
+    selected_level = pyqtSignal(str, int, int)
 
     def __init__(self) -> None:
         super().__init__()
@@ -30,24 +30,42 @@ class LevelSelector(QWidget):
         
         self.options = QComboBox(self)
         self.button = QPushButton("&Go!", self)
-        self.button.clicked.connect(self.send_level)
+        self.dimensions_label = QLabel("Dimensions: ", self)
+        self.width_line = QSpinBox(self)
+        self.height_line = QSpinBox(self)
         
-        options_vbox = QVBoxLayout()
-        options_vbox.addStretch(1)
-        options_vbox.addWidget(self.options)
-        options_vbox.addStretch(1)
+        self.options.currentTextChanged.connect(self.show_dimensions)
+        self.button.clicked.connect(self.send_level)
+        self.width_line.setMinimum(0)
+        self.width_line.setMaximum(100)
+        self.height_line.setMinimum(0)
+        self.height_line.setMaximum(100)
+        
+        
+        options_box = QHBoxLayout()
+        options_box.addStretch(1)
+        options_box.addWidget(self.options)
+        options_box.addStretch(1)
 
-        button_vbox = QVBoxLayout()
-        button_vbox.addStretch(1)
-        button_vbox.addWidget(self.button)
+        dimensions_box = QHBoxLayout()
+        dimensions_box.addStretch(1)
+        dimensions_box.addWidget(self.dimensions_label)
+        dimensions_box.addWidget(self.width_line)
+        dimensions_box.addWidget(self.height_line)
+        dimensions_box.addStretch(1)
 
-        hbox = QHBoxLayout()
-        hbox.addStretch(1)
-        hbox.addLayout(options_vbox)
-        hbox.addStretch(1)
-        hbox.addLayout(button_vbox)
+        button_box = QHBoxLayout()
+        button_box.addStretch(1)
+        button_box.addWidget(self.button)
 
-        self.setLayout(hbox)
+        main_box = QVBoxLayout()
+        main_box.addStretch(1)
+        main_box.addLayout(options_box)
+        main_box.addLayout(dimensions_box)
+        main_box.addStretch(1)
+        main_box.addLayout(button_box)
+
+        self.setLayout(main_box)
 
     def add_options(self, options: list[str]):
         self.options.clear()
@@ -55,7 +73,19 @@ class LevelSelector(QWidget):
 
     def send_level(self):
         level = self.options.currentText()
-        self.selected_level.emit(level)
+        width = self.width_line.value()
+        height = self.height_line.value()
+        self.selected_level.emit(level, width, height)
+
+    def show_dimensions(self, options_text: str):
+        if (options_text != "new maze"):
+            self.dimensions_label.hide()
+            self.width_line.hide()
+            self.height_line.hide()
+        else:
+            self.dimensions_label.show()
+            self.width_line.show()
+            self.height_line.show()
 
 
 class GameWindow(QMainWindow):
@@ -95,6 +125,8 @@ class GameWindow(QMainWindow):
 
     def keyPressEvent(self, a0: QKeyEvent | None) -> None:
         self.pressed_key.emit(a0)
+        if a0.text() == "r" and False:
+            self.rata()
         
 
     def move_player(self, direction: str, new_position: list):
@@ -131,17 +163,21 @@ class EditorWindow(QMainWindow):
         if old_layout is not None:
             QWidget().setLayout(old_layout)
 
-        layout = QGridLayout()
+        layout = QGridLayout(self.centralWidget())
         layout.setSpacing(0)
         positions = f_utils.get_all_positions(maze)
 
         for i, j in positions:
             tile = entities.ClickableTile(self, (i, j))
+            # tile = entities.Wall(self)
             layout.addWidget(tile, i, j)
             tile.clicked.connect(self.tile_clicked)
             
-            if maze[i][j] == "-":
+            if maze[i][j] != "P":
                 tile.change_sprite()
+            tile.repaint()
+
+        self.centralWidget().setLayout(layout)
 
     def tile_clicked(self):
         tile = self.sender()

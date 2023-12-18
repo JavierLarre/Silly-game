@@ -87,18 +87,13 @@ class EditorLogic(QObject):
     
     def start(self):
         mazes = b_utils.get_mazes()
-        mazes.append("&new maze")
+        mazes.append("new maze")
         self.mazes_list.emit(mazes)
 
-    def load_maze(self, file_name: str):
-        if file_name == "&new maze":
-            self.maze = [["P" for i in range(self.width)] for j in range(self.height)]
+    def load_maze(self, file_name: str, width: int, height: int):
+        if file_name == "new maze":
+            self.maze = [["P" for i in range(width)] for j in range(height)]
         else:
             self.maze = b_utils.read_maze(file_name)
         
-        self.get_special_positions()
         self.selected_maze.emit(self.maze)
-
-    def recieve_dimensions(self, w, h):
-        self.width = w
-        self.height = h

@@ -14,9 +14,13 @@ class LevelEditor:
     def connect_backend_signals(self):
         self.backend.mazes_list.connect(
             self.frontend.add_level_options)
+        
+        self.backend.selected_maze.connect(
+            self.frontend.show_level_editor)
 
     def connect_frontend_signals(self):
-        pass
+        self.frontend.selected_level.connect(
+            self.backend.load_maze)
 
     def start(self):
         self.backend.start()

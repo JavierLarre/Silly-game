@@ -8,7 +8,7 @@ from game.frontend.frontend_functions import get_sprite_path
 
 WALL_FILE_NAME = "bloque_pared"
 BACKGROUND_FILE_NAME = "bloque_fondo"
-FILE_EXTENSION = "jpg"
+FILE_EXTENSION = "jpeg"
 
 
 class Player(QLabel):
@@ -50,14 +50,16 @@ class ClickableTile(QLabel):
 
     def __init__(self, parent, position):
         super().__init__(parent)
-        self.wall_tile = Wall(self)
-        self.background_tile = BackGround(self)
         self.position = position
+        self.wall_tile = Wall(parent)
+        self.background_tile = BackGround(parent)
+        self.wall_tile.hide()
+        self.background_tile.hide()
 
         self.current_sprite = "wall"
         self.setPixmap(self.wall_tile.pixmap())
         self.setScaledContents(True)
-
+        
     def change_sprite(self):
         if self.current_sprite == "wall":
             self.current_sprite = "background"

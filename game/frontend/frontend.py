@@ -7,7 +7,7 @@ from game.frontend.windows import LevelSelector, GameWindow, EditorWindow
 
 class GraphicsLogic(QObject):
     pressed_key = pyqtSignal(QKeyEvent)
-    selected_level = pyqtSignal(str)
+    selected_level = pyqtSignal(str, int, int)
     
     def __init__(self) -> None:
         super().__init__()
