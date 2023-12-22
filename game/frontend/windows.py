@@ -149,6 +149,8 @@ class GameWindow(QMainWindow):
         rata_2.show()
         
 class EditorWindow(QMainWindow):
+    clicked_tile = pyqtSignal(tuple)
+
     def __init__(self) -> None:
         super().__init__()
         self.setGeometry(p.X_POS,
@@ -169,16 +171,21 @@ class EditorWindow(QMainWindow):
 
         for i, j in positions:
             tile = entities.ClickableTile(self, (i, j))
-            # tile = entities.Wall(self)
             layout.addWidget(tile, i, j)
             tile.clicked.connect(self.tile_clicked)
             
             if maze[i][j] != "P":
                 tile.change_sprite()
-            tile.repaint()
 
         self.centralWidget().setLayout(layout)
 
     def tile_clicked(self):
-        tile = self.sender()
-        print(tile.position)
+        tile: entities.ClickableTile = self.sender()
+        position = tile.position
+        self.clicked_tile.emit(position)
+    
+    def change_tile(self, position: tuple):
+        i, j = position
+        grid = self.centralWidget().layout()
+        tile = grid.itemAtPosition(i, j).widget()
+        tile.change_sprite()

@@ -8,6 +8,7 @@ from game.frontend.windows import LevelSelector, GameWindow, EditorWindow
 class GraphicsLogic(QObject):
     pressed_key = pyqtSignal(QKeyEvent)
     selected_level = pyqtSignal(str, int, int)
+    pressed_tile = pyqtSignal(tuple)
     
     def __init__(self) -> None:
         super().__init__()
@@ -20,6 +21,8 @@ class GraphicsLogic(QObject):
             self.pressed_key.emit)
         
         self.editor_window = EditorWindow()
+        self.editor_window.clicked_tile.connect(
+            self.pressed_tile.emit)
     
     def start(self):
         self.level_selector.show()
@@ -46,3 +49,6 @@ class GraphicsLogic(QObject):
         self.level_selector.hide()
         self.editor_window.load_maze(maze)
         self.editor_window.show()
+
+    def change_tile(self, position: tuple):
+        self.editor_window.change_tile(position)

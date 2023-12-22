@@ -74,12 +74,13 @@ class GameLogic(QObject):
                 self.player_position = [i, j]
             if self.maze[i][j] == "S":
                 self.special_positions["exit"] = [i, j]
-            
+
 
 class EditorLogic(QObject):
     mazes_list = pyqtSignal(list)
     selected_maze = pyqtSignal(list)
     status_bar = pyqtSignal(str)
+    change_tile = pyqtSignal(tuple)
 
     def __init__(self) -> None:
         super().__init__()
@@ -97,3 +98,8 @@ class EditorLogic(QObject):
             self.maze = b_utils.read_maze(file_name)
         
         self.selected_maze.emit(self.maze)
+
+    def press_tile(self, position: tuple):
+        i, j = position
+        self.change_tile.emit(position)
+            

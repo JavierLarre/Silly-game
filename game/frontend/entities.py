@@ -48,7 +48,7 @@ class BackGround(QLabel):
 class ClickableTile(QLabel):
     clicked = pyqtSignal()
 
-    def __init__(self, parent, position):
+    def __init__(self, parent, position: tuple):
         super().__init__(parent)
         self.position = position
         self.wall_tile = Wall(parent)
