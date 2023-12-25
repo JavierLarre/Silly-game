@@ -52,3 +52,7 @@ class GraphicsLogic(QObject):
 
     def change_tile(self, position: tuple):
         self.editor_window.change_tile(position)
+
+    def change_status(self, text: str):
+        self.game_window.statusBar().showMessage(text)
+        self.editor_window.statusBar().showMessage(text)

@@ -40,10 +40,19 @@ def is_valid_position(new_position: Iterable, maze: list) -> bool:
 
 def get_all_positions(maze: list):
     width = range(len(maze))
-    length =range(len(maze[0]))
+    length = range(len(maze[0]))
     return product(width, length)
 
 def get_axis(direction: str) -> tuple:
     axis = (0 if (direction == "up" or direction == "down") else 1)
     i = (-1 if (direction == "up" or direction == "left") else 1)
     return (axis, i)
+
+def on_border(position: tuple, maze: list) -> bool:
+    i, j = position
+    width = len(maze)
+    length = len(maze[0])
+    return (False if 
+            (0 < i < (width - 1)
+             and 0 < j < (length - 1))
+            else True)

@@ -100,6 +100,9 @@ class EditorLogic(QObject):
         self.selected_maze.emit(self.maze)
 
     def press_tile(self, position: tuple):
-        i, j = position
+        if b_utils.on_border(position, self.maze):
+            self.status_bar.emit("You can't edit border tiles!")
+            return
+        
         self.change_tile.emit(position)
             

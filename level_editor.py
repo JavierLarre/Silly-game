@@ -20,6 +20,9 @@ class LevelEditor:
 
         self.backend.change_tile.connect(
             self.frontend.change_tile)
+        
+        self.backend.status_bar.connect(
+            self.frontend.change_status)
 
     def connect_frontend_signals(self):
         self.frontend.selected_level.connect(

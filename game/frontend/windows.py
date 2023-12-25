@@ -36,9 +36,9 @@ class LevelSelector(QWidget):
         
         self.options.currentTextChanged.connect(self.show_dimensions)
         self.button.clicked.connect(self.send_level)
-        self.width_line.setMinimum(0)
+        self.width_line.setMinimum(1)
         self.width_line.setMaximum(100)
-        self.height_line.setMinimum(0)
+        self.height_line.setMinimum(1)
         self.height_line.setMaximum(100)
         
         
