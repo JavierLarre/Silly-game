@@ -5,6 +5,7 @@ from PyQt6.QtCore import pyqtSignal, Qt
 from PyQt6.QtGui import QPixmap
 
 from game.frontend.frontend_functions import get_sprite_path
+import param as p
 
 WALL_FILE_NAME = "bloque_pared"
 BACKGROUND_FILE_NAME = "bloque_fondo"
@@ -35,6 +36,7 @@ class Wall(QLabel):
         super().__init__(parent)
         path = get_sprite_path(f"{WALL_FILE_NAME}.{FILE_EXTENSION}")
         self.setPixmap(QPixmap(path))
+        self.setFixedSize(p.TILE_SIZE, p.TILE_SIZE)
         self.setScaledContents(True)
 
 
@@ -43,6 +45,7 @@ class BackGround(QLabel):
         super().__init__(parent)
         path = get_sprite_path(f"{BACKGROUND_FILE_NAME}.{FILE_EXTENSION}")
         self.setPixmap(QPixmap(path))
+        self.setFixedSize(p.TILE_SIZE, p.TILE_SIZE)
         self.setScaledContents(True)
 
 class ClickableTile(QLabel):
@@ -58,6 +61,7 @@ class ClickableTile(QLabel):
 
         self.current_sprite = "wall"
         self.setPixmap(self.wall_tile.pixmap())
+        self.setFixedSize(p.TILE_SIZE, p.TILE_SIZE)
         self.setScaledContents(True)
         
     def change_sprite(self):

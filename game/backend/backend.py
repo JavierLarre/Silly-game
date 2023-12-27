@@ -79,8 +79,8 @@ class GameLogic(QObject):
 class EditorLogic(QObject):
     mazes_list = pyqtSignal(list)
     selected_maze = pyqtSignal(list)
-    status_bar = pyqtSignal(str)
-    change_tile = pyqtSignal(tuple)
+    status_bar = pyqtSignal(str, int)
+    change_tile_signal = pyqtSignal(tuple)
 
     def __init__(self) -> None:
         super().__init__()
@@ -101,8 +101,14 @@ class EditorLogic(QObject):
 
     def press_tile(self, position: tuple):
         if b_utils.on_border(position, self.maze):
-            self.status_bar.emit("You can't edit border tiles!")
+            self.status_bar.emit("You can't edit border tiles!", 1000)
             return
         
-        self.change_tile.emit(position)
-            
+        self.change_tile(position)
+
+    def change_tile(self, position: tuple):
+        i, j = position
+        current_tile = self.maze[i][j]
+        new_tile = "-" if (current_tile == "P") else "P"
+        self.maze[i][j] = new_tile
+        self.change_tile_signal.emit(position)

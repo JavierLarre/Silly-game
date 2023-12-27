@@ -36,9 +36,9 @@ class LevelSelector(QWidget):
         
         self.options.currentTextChanged.connect(self.show_dimensions)
         self.button.clicked.connect(self.send_level)
-        self.width_line.setMinimum(1)
+        self.width_line.setMinimum(3)
         self.width_line.setMaximum(100)
-        self.height_line.setMinimum(1)
+        self.height_line.setMinimum(3)
         self.height_line.setMaximum(100)
         
         
@@ -98,8 +98,7 @@ class GameWindow(QMainWindow):
                          p.Y_POS,
                          p.WIDTH_GAME,
                          p.HEIGHT_GAME)
-        self.setCentralWidget(QLabel(self))
-        self.centralWidget().setMaximumSize(p.WIDTH_GAME, p.HEIGHT_GAME)
+        self.setCentralWidget(QWidget(self))
         
     def load_maze(self, maze: list):
         old_layout = self.centralWidget().layout()
@@ -125,8 +124,6 @@ class GameWindow(QMainWindow):
 
     def keyPressEvent(self, a0: QKeyEvent | None) -> None:
         self.pressed_key.emit(a0)
-        if a0.text() == "r" and False:
-            self.rata()
         
 
     def move_player(self, direction: str, new_position: list):
@@ -155,10 +152,8 @@ class EditorWindow(QMainWindow):
         super().__init__()
         self.setGeometry(p.X_POS,
                          p.Y_POS,
-                         p.WIDTH_GAME,
-                         p.HEIGHT_GAME)
-        self.setCentralWidget(QLabel(self))
-        self.centralWidget().setMaximumSize(p.WIDTH_GAME, p.HEIGHT_GAME)
+                         0, 0)
+        self.setCentralWidget(QWidget(self))
 
     def load_maze(self, maze: list):
         old_layout = self.centralWidget().layout()

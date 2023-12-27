@@ -18,7 +18,7 @@ class LevelEditor:
         self.backend.selected_maze.connect(
             self.frontend.show_level_editor)
 
-        self.backend.change_tile.connect(
+        self.backend.change_tile_signal.connect(
             self.frontend.change_tile)
         
         self.backend.status_bar.connect(

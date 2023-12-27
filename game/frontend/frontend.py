@@ -43,7 +43,7 @@ class GraphicsLogic(QObject):
         self.game_window.hide()
 
     def exit_reached(self):
-        self.game_window.rata()
+        self.change_status("you won!")
     
     def show_level_editor(self, maze: list):
         self.level_selector.hide()
@@ -53,6 +53,6 @@ class GraphicsLogic(QObject):
     def change_tile(self, position: tuple):
         self.editor_window.change_tile(position)
 
-    def change_status(self, text: str):
-        self.game_window.statusBar().showMessage(text)
-        self.editor_window.statusBar().showMessage(text)
+    def change_status(self, text: str, msec: int = 0):
+        self.game_window.statusBar().showMessage(text, msec)
+        self.editor_window.statusBar().showMessage(text, msec)
